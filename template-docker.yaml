@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Autolied - Sheet Music to PowerPoint Converter (Docker version)
+
+Resources:
+  AutoliedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      ImageConfig:
+        Command: ["lambda_handler.handler"]
+      MemorySize: 3008
+      Timeout: 900
+      Environment:
+        Variables:
+          FLASK_ENV: production
+      Events:
+        ApiRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+            RestApiId: !Ref AutoliedApi
+        ApiProcess:
+          Type: Api
+          Properties:
+            Path: /process
+            Method: POST
+            RestApiId: !Ref AutoliedApi
+        ApiDownload:
+          Type: Api
+          Properties:
+            Path: /download/{filename}
+            Method: GET
+            RestApiId: !Ref AutoliedApi
+        ApiHealth:
+          Type: Api
+          Properties:
+            Path: /health
+            Method: GET
+            RestApiId: !Ref AutoliedApi
+        ApiTest:
+          Type: Api
+          Properties:
+            Path: /test
+            Method: GET
+            RestApiId: !Ref AutoliedApi
+        ApiProxy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId: !Ref AutoliedApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: .
+      DockerTag: latest
+
+  AutoliedApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes:
+        - '*/*'
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Autolied"
+    Value: !Sub "https://${AutoliedApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: !Sub "${AWS::StackName}-ApiUrl"

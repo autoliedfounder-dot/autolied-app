@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Autolied - Sheet Music to PowerPoint Converter
+
+Globals:
+  Function:
+    Timeout: 900
+    MemorySize: 3008
+    Runtime: python3.9
+    Architectures:
+      - x86_64
+  Api:
+    BinaryMediaTypes:
+      - '*/*'
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+
+Resources:
+  AutoliedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_handler.handler
+      Runtime: python3.9
+      MemorySize: 3008
+      Timeout: 900
+      Environment:
+        Variables:
+          FLASK_ENV: production
+      Events:
+        ApiRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+        ApiProcess:
+          Type: Api
+          Properties:
+            Path: /process
+            Method: POST
+        ApiProcessOptions:
+          Type: Api
+          Properties:
+            Path: /process
+            Method: OPTIONS
+        ApiDownload:
+          Type: Api
+          Properties:
+            Path: /download/{filename}
+            Method: GET
+        ApiHealth:
+          Type: Api
+          Properties:
+            Path: /health
+            Method: GET
+        ApiTest:
+          Type: Api
+          Properties:
+            Path: /test
+            Method: GET
+        ApiProxy:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Autolied"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

@@ -1,0 +1,6 @@
+--2025-08-03 03:13:31--  https://prod-04-2014-tasks.s3.us-east-1.amazonaws.com/snapshots/084756856431/autolied-app-AutoliedFunction-i7Gt1and54AX-12ba33cc-ada2-4b9d-8b73-f2510a9779ef?versionId=Aav8zAMMaoApGPb5OOQfH0bBaI9Ahmbq
+Resolving prod-04-2014-tasks.s3.us-east-1.amazonaws.com (prod-04-2014-tasks.s3.us-east-1.amazonaws.com)... 52.217.93.112, 52.217.114.66, 16.15.200.42, ...
+Connecting to prod-04-2014-tasks.s3.us-east-1.amazonaws.com (prod-04-2014-tasks.s3.us-east-1.amazonaws.com)|52.217.93.112|:443... connected.
+HTTP request sent, awaiting response... 403 Forbidden
+2025-08-03 03:13:31 ERROR 403: Forbidden.
+
